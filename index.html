@@ -2,45 +2,98 @@
 <html>
     <head>
         <title>Bossa Nouvelles</title>
-        <style>
-            html, body{
-                margin:0;
-                text-align: center;
-                background-color:black;
-                overflow:hidden;
-            }
-            video {
-                height:100vh;
-                margin:0 auto;
-                display: block;
-               
-            }
-            iframe{
-                position: absolute;
-                left: 0px;
-                top: -100000px !important;
-                z-index: 0;
-            }
-            @media (orientation: portrait) {
-                 video {
-                    height: 100vh;
-                    margin: 0 -68vw;
-                }
-}
-@media (orientation: landscape) {
-                 video {
-                    width: auto;
-                    height:100vh;
-                }
-}
-        </style>
+        <link rel="stylesheet" href="font/stylesheet.css" type="text/css">
+        <link rel="stylesheet" href="style.css" type="text/css">
+
     </head>
     <body>
         <video src="p-roy.mp4" playsinline autoplay muted loop></video>
- text-align: center;
-                background-color:black;
+        <div id="player"></div>
+        <div id="headerTop">BOSSA NOUVELLES</div>
+        <div id="headerBottom">BOSSA NOUVELLES</div>
+        <div id="control" class="hidden">
+        <span id="title">VOLUME</span><br/><span id="value">||||-----------</span>
+        
+        </div>
+       <!-- <iframe id="player" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="640" height="360" src="https://www.youtube.com/embed/M9fxa9hd1zI?autoplay=1&amp;controls=1&amp;modestbranding=1&amp;playlist=j6Q7H11eTaw&amp;showinfo=0&amp;start=0&amp;loop=1&amp;enablejsapi=1&amp;origin=http%3A%2F%2Fbenrochon.com&amp;widgetid=1"></iframe>
+    -->
 
+    <script>
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: 'M9fxa9hd1zI',
+            playerVars: {
+                enablejsapi:1,
+                loop:1,
+                start:0,
+            },
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': null
+            }
+          });
+        }
+        var volume = 3;
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+            setVolume(volume);
+            setVisible("#control",true)
+            setTimeout(setVisible("#control",false), 3000);
+            event.target.seekTo(0);
+            event.target.playVideo();
+        }
+  
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+          if (event.data == YT.PlayerState.PLAYING && !done) {
+            
+            done = true;
+          }
+        }
+        function setVisible(element, state) {
+            let selection = document.querySelector(element)
+            state ? selection.classList.remove("hidden") : selection.classList.add("hidden")
+        }
+        document.addEventListener("mousemove", function(e){
+            setVisible("#control",true);
+            //setTimeout(setVisible("#control",false), 3000);
+        });
 
-                <iframe id="player" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="640" height="360" src="https://www.youtube.com/embed/M9fxa9hd1zI?autoplay=1&amp;controls=0&amp;modestbranding=1&amp;playlist=j6Q7H11eTaw&amp;showinfo=0&amp;start=0&amp;loop=1&amp;enablejsapi=1&amp;origin=http%3A%2F%2Fbenrochon.com&amp;widgetid=1"></iframe>
+        function setVolume(value){
+            let selection = document.querySelector("#control #value")
+            value > 15 ? value = 15 : null;
+            player.setVolume(Math.round(value*6.666))
+            selection.innerHTML = VolumeUIValue(value);
+        }
+        function lowerVolume(){
+          volume=volume-1;
+          setVolume(volume);
+          MyFunction();return false;
+        }
+
+        function VolumeUIValue(value){
+            output=""
+            for(var i=1; i<=15;i++){
+                i<=value ? output = output+"<a href='#' onclick='volume=volume-1;setVolume(volume);return false'>|</a>":output = output+"<a href='#' onclick='volume=volume+1;setVolume(volume);return false'>-</a>"
+            }
+            return output
+        }
+        
+
+      </script>
     </body>
 </html>
