@@ -8,7 +8,7 @@ html, body{
 #headerTop {
     font-family: 'vcr';
     position: absolute;
-    right: 18%;
+    right: 10%;
     top: -20px;
     z-index: 100000;
     color: white;
@@ -18,8 +18,8 @@ html, body{
 #headerBottom {
     font-family: 'vcr';
     position: absolute;
-    right: 18%;
-    top: -20px;
+    right: 10%;
+    bottom: -8px;
     z-index: 100000;
     color: white;
     text-align: left;
